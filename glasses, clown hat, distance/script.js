@@ -43,13 +43,13 @@ function draw() {
     if(poses.length >0){
         //red nose
         let nose = poses[0].nose;
-        //console.log(nose);
-        //fill(255, 0, 0);
-        //circle(nose.x, nose.y, 20);
+        console.log(nose);
+        fill(255, 0, 0);
+        circle(nose.x, nose.y, 20);
 
         //draw glasses
         //get positions
-        let leftEye = poses[0].left_eye;
+        /*let leftEye = poses[0].left_eye;
         let rightEye = poses[0].right_eye;
         
         //get distance between eyes
@@ -65,9 +65,9 @@ function draw() {
 
         
         //clown hat
-        let x = leftEye.x - 140;
+        /*let x = leftEye.x - 140;
         let y = leftEye.y - 220;
-        image(chapeau, x, y, 200, 200);
+        image(chapeau, x, y, 200, 200);*/
 
 
 
@@ -77,12 +77,14 @@ function draw() {
         //if(leftWrist.y < 100){
             //do stuff if hand is raised
            // background(0, 120, 120, 150); //4th is alpha = opacity
-        //}
-    }
-}
+        //}*/
+    //}
+//}
 
 
-function mousePressed() {
-    console.log(poses);
+//function mousePressed() {
+//    console.log(poses);
     
+    }
+
 }

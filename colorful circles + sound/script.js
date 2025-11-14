@@ -31,8 +31,5 @@ function mousePressed(){
     fill(red, blue, green);
 
 
-    //frequency =
-
-
     
 }
