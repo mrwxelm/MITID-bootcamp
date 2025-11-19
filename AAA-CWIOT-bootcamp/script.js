@@ -2,8 +2,11 @@ let video;
 let status;
 let detectionModel;
 let objects = [];
-let flower;
+let flower1;
+let flower2;
+let flower3;
 let flowerArray = [];
+
 
 /*window.onload = () => {
   modelPromise = cocoSsd.load().then(m => {
@@ -25,7 +28,7 @@ let still;
 let timeStill;
 let start = Date.now(); //debut (premiere detection)
 
-let lifetime = 2000; //2 seconds
+let lifetime = 3000; //2 seconds
 
 
 // Linear interpolation
@@ -67,14 +70,18 @@ function detect() {
   });
 }
 
-function displayFlower(x, y, width, height){
-    image(flower, x, y, width, height);
+function displayFlower(x, y, width, height, type){
+    let randomOffsetX = random(-width, width);
+    image(type, x + randomOffsetX , y + randomOffsetX , width, height);
+    //image(flower2, x + randomOffsetX , y + randomOffsetX , width, height);
+    //image(flower3, x + randomOffsetX , y + randomOffsetX , width, height);
 }
 
 
 function preload() {
-    flower = loadImage("fleurpetite.png");
-    
+    flower1 = loadImage("flower1.png");
+    flower2 = loadImage("flower2.png");
+    flower3 = loadImage("flower3.png");
 }
 
 function setup() {
@@ -92,7 +99,9 @@ function setup() {
 function draw() {
     if (objects.length>0){
         //cadre object detecte
-        image(video, 0, 0, width, height);
+
+        //image(video, 0, 0, width, height);
+        background(255);
     
         const person = objects[0];
         let objectX = person.bbox[0];
@@ -105,11 +114,11 @@ function draw() {
         let centerX = objectX + (objectWidth/2);
         let centerY = objectY + (objectHeight/2);
         noStroke();
-        //fill(0, 0, 0);
+        fill(0, 0, 0);
         text(objectClass, objectX, objectY - 5);
         noFill();
         strokeWeight(2);
-        //stroke(0, 255, 0);
+        stroke(0, 255, 0);
         rect(objectX, objectY, objectWidth, objectHeight);
         
 
@@ -152,7 +161,13 @@ function draw() {
             
             //draw them
             for(let f of flowerArray){
-                displayFlower(f.x, f.y, 40, 40);
+                displayFlower(f.x, f.y, 40, 40, flower1);
+                displayFlower(f.x, f.y, 40, 40, flower2);
+                displayFlower(f.x, f.y, 40, 40, flower);
+                //test
+
+
+
             } 
             
             //remove when older than 2min
