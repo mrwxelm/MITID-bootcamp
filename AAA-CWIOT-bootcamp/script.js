@@ -1,52 +1,169 @@
-//most recent circle coordinates 
-let cx ;
-let cy ;
+let video;
+let status;
+let detectionModel;
+let objects = [];
+let flower;
+let flowerArray = [];
 
-let x;
-let y;
+/*window.onload = () => {
+  modelPromise = cocoSsd.load().then(m => {
+    model = m;
+    console.log("Model loaded");
+  });
+}; //when full page is loaded run model
+*/
 
-let radius ;
-let inside;
+let cx = 0;
+let cy = 0;
+let radius = 10;
+let zoneRadius;
+let flowerRadius;
+
+let x = 0;
+let y = 0;
+let still;
+let timeStill;
+let start = Date.now(); //debut (premiere detection)
+
+let lifetime = 2000; //2 seconds
+
+
+// Linear interpolation
+const lerp = (value, target, damp) => value + (target - value) * damp
+
+//did we move 
+function pointInsideCircle(x, y, cx, cy, radius) {
+    const distance =
+        Math.sqrt((x - cx) ** 2 + (y - cy) ** 2);
+    return distance < radius;
+}
+
+function randomPointInCircle(x, y, radius){
+    const angle = random() * 2 * PI;
+    const hypothenuse = sqrt(random() * radius);
+    const adjacent = cos(angle) * hypothenuse;
+    const opposite = sin(angle) * hypothenuse;
+    return {x: x + adjacent, y: y + opposite};
+}
+
+function loadCocoModel() {
+  cocoSsd.load({
+    'base': "mobilenet_v2"
+  }).then(modelReady);
+}
+
+function modelReady(model) {
+  detectionModel = model;
+  status.html("Model loaded!");
+  detect();
+}
+
+function detect() {
+  detectionModel.detect(video.elt).then(results => {
+    objects = results; //store detected objects in the array
+    //filtrer les personnes seulements
+    //baisser le seuil d'acceptabilite
+    window.requestAnimationFrame(detect);
+  });
+}
+
+function displayFlower(x, y, width, height){
+    image(flower, x, y, width, height);
+}
+
 
 function preload() {
-    // Load ressources before setup
-
+    flower = loadImage("fleur.png");
+    
 }
 
 function setup() {
-    // Code that runs once here
-    createCanvas(500, 500).parent("sketch-container");
-    // Given Coordinates 
-    cx = 0;
-    cy = 0;
-    radius = 50;
+    createCanvas(640, 480);
+   // frameRate(30);
+    video = createCapture(VIDEO);
+    video.size(640, 480);
+    video.elt.addEventListener("loadedmetadata", loadCocoModel);
+    video.hide();
+    status = select("#status");
     
+  
 }
 
 function draw() {
-    // Code that runs repeatedly code here
-    //      background(200);
-    //first circle
-    x = mouseX;
-    y = mouseY;
-
-    inside = pointInsideCircle(x, y, cx, cy, radius);
+    if (objects.length>0){
+        //cadre object detecte
+        image(video, 0, 0, width, height);
     
-    circle(x, y, radius * 2);
+        const person = objects[0];
+        let objectX = person.bbox[0];
+        let objectY = person.bbox[1];
+        let objectWidth = person.bbox[2];
+        let objectHeight = person.bbox[3];
+        let objectClass = person.class;
+        let objectScore = person.score;
 
-    if (inside == false){
-        console.log(inside);
+        let centerX = objectX + (objectWidth/2);
+        let centerY = objectY + (objectHeight/2);
+        noStroke();
+        //fill(0, 0, 0);
+        text(objectClass, objectX, objectY - 5);
+        noFill();
+        strokeWeight(2);
+        //stroke(0, 255, 0);
+        rect(objectX, objectY, objectWidth, objectHeight);
+        
+
+        const currentTimeStamp = Date.now(); //info utilisée plus tard
+        //background(20);
+        x = lerp(x, centerX, 0.1)
+        y = lerp(y, centerY, 0.1)
+        
+        //fill(255)
+        circle(x, y, radius);
+
+
+        //moved or not 
+        if(pointInsideCircle(x, y, cx, cy, radius)){
+            still = true;
+        } else {
+            still = false;
+        } 
+        circle(centerX, centerY, radius);
+        cx = x;
+        cy = y;
+
+        //zone d'apparition
+        if (still){
+            timeStill = currentTimeStamp  - start; //milliseconds passées sans bouger (entre mnt et le debut = currentTimeStamp prit au debut)
+            //fill(0, 0, 255); //blue circle that keeps growing 
+
+            zoneRadius = timeStill / 200; //pour que le perimetre grossise plus ou moins vite
+            circle(x, y, radius * zoneRadius);
+        
+            const randomPoint = randomPointInCircle(x, y, zoneRadius * 500);
+            console.log(currentTimeStamp);
+            
+            //push them into the array and store creation time
+            flowerArray.push({ 
+                x: randomPoint.x, 
+                y: randomPoint.y, 
+                createdAt: Date.now()
+            });
+            
+            //draw them
+            for(let f of flowerArray){
+                displayFlower(f.x, f.y, 40, 40);
+            } 
+            
+            //remove when older than 2min
+            flowerArray = flowerArray.filter(f => (Date.now() - f.createdAt) < lifetime);
+
+        }else{
+            start = currentTimeStamp; //c'est date.now du debut
+            timeStill = 0;
+            
+        }
     }
-    
 
-    //new circle 
-    cx = x;
-    cy = y;
-    
-}
-
-function pointInsideCircle(x, y, cx, cy, radius) {
-  const distance = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2);
-    return distance < radius;
 }
 
