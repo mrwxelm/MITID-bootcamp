@@ -100,8 +100,8 @@ function draw() {
     if (objects.length>0){
         //cadre object detecte
 
-        //image(video, 0, 0, width, height);
-        background(255);
+        image(video, 0, 0, width, height);
+        //background(255);
     
         const person = objects[0];
         let objectX = person.bbox[0];
@@ -163,7 +163,7 @@ function draw() {
             for(let f of flowerArray){
                 displayFlower(f.x, f.y, 40, 40, flower1);
                 displayFlower(f.x, f.y, 40, 40, flower2);
-                displayFlower(f.x, f.y, 40, 40, flower);
+                displayFlower(f.x, f.y, 40, 40, flower3);
                 //test
 
 
