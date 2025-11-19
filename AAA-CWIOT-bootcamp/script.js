@@ -2,7 +2,10 @@ let video;
 let status;
 let detectionModel;
 let objects = [];
-let flower;
+let flower1;
+let flower2;
+let flower3; //needs to be changed
+let flower4;
 let flowerArray = [];
 
 /*window.onload = () => {
@@ -25,7 +28,7 @@ let still;
 let timeStill;
 let start = Date.now(); //debut (premiere detection)
 
-let lifetime = 2000; //2 seconds
+let lifetime = 3000; 
 
 
 // Linear interpolation
@@ -67,13 +70,15 @@ function detect() {
   });
 }
 
-function displayFlower(x, y, width, height){
-    image(flower, x, y, width, height);
+function displayFlower(x, y, width, height){ //make it so they alternate
+    image(flower1, x, y, width, height);
+    //image(flower2, x, y, width, height);
+    //image(flower4, x, y, width, height);
 }
 
 
-function preload() {
-    flower = loadImage("fleurpetite.png");
+function preload() { 
+    flower1 = loadImage("fleur1.png");
     
 }
 
