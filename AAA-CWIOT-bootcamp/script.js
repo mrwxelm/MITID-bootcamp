@@ -28,7 +28,7 @@ let still;
 let timeStill;
 let start = Date.now(); //debut (premiere detection)
 
-let lifetime = 3000; //2 seconds
+let lifetime = 3000; 
 
 
 // Linear interpolation
@@ -181,4 +181,3 @@ function draw() {
     }
 
 }
-
