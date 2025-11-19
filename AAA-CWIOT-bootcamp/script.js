@@ -73,13 +73,13 @@ function displayFlower(x, y, width, height){
 
 
 function preload() {
-    flower = loadImage("fleur.png");
+    flower = loadImage("fleurpetite.png");
     
 }
 
 function setup() {
     createCanvas(640, 480);
-   // frameRate(30);
+    frameRate(30);
     video = createCapture(VIDEO);
     video.size(640, 480);
     video.elt.addEventListener("loadedmetadata", loadCocoModel);
