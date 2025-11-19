@@ -7,6 +7,11 @@ let flower2;
 let flower3;
 let flowerArray = [];
 
+let randomMod1;
+let randomMod2;
+let randomMod3;
+
+
 
 /*window.onload = () => {
   modelPromise = cocoSsd.load().then(m => {
@@ -22,13 +27,16 @@ let radius = 10;
 let zoneRadius;
 let flowerRadius;
 
+let yOffset = 150;
+let flowerSize = 40;
+
 let x = 0;
 let y = 0;
 let still;
 let timeStill;
 let start = Date.now(); //debut (premiere detection)
 
-let lifetime = 3000; 
+let lifetime = 3500; 
 
 
 // Linear interpolation
@@ -63,8 +71,14 @@ function modelReady(model) {
 
 function detect() {
   detectionModel.detect(video.elt).then(results => {
-    objects = results; //store detected objects in the array
+    //console.log(results);
+
+    //if(results.class == 'person'){
+        objects = results;
+    //}
+     //store detected objects in the array
     //filtrer les personnes seulements
+
     //baisser le seuil d'acceptabilite
     window.requestAnimationFrame(detect);
   });
@@ -85,10 +99,10 @@ function preload() {
 }
 
 function setup() {
-    createCanvas(640, 480);
+    createCanvas(windowWidth , windowHeight - 100);
     frameRate(30);
     video = createCapture(VIDEO);
-    video.size(640, 480);
+    video.size(windowWidth, windowHeight);
     video.elt.addEventListener("loadedmetadata", loadCocoModel);
     video.hide();
     status = select("#status");
@@ -97,12 +111,28 @@ function setup() {
 }
 
 function draw() {
+        //image(video, 0, 0, width, height);
+        fill(0, 0, 0);
+        noStroke();
+        rect(((windowWidth/2) + (windowWidth /4)) + 20, 0, 500, windowHeight);
+
     if (objects.length>0){
+        background(255);
+        fill(0, 0, 0);
+        noStroke();
+        rect(((windowWidth/2) + (windowWidth /4)) + 20, 0, 500, windowHeight);
+
+
         //cadre object detecte
 
         //image(video, 0, 0, width, height);
-        background(255);
+        //background(255);
     
+        const candidates = objects.filter( x => {
+          return x.class == "person" && x.score > 0.2
+        })
+        console.log(candidates);
+        if(candidates.length == 0) return;
         const person = objects[0];
         let objectX = person.bbox[0];
         let objectY = person.bbox[1];
@@ -115,17 +145,17 @@ function draw() {
         let centerY = objectY + (objectHeight/2);
         noStroke();
         fill(0, 0, 0);
-        text(objectClass, objectX, objectY - 5);
+        //text(objectClass, objectX, objectY - 5);
         noFill();
         strokeWeight(2);
         stroke(0, 255, 0);
-        rect(objectX, objectY, objectWidth, objectHeight);
+        //rect(objectX, objectY, objectWidth, objectHeight);
         
 
         const currentTimeStamp = Date.now(); //info utilisée plus tard
         //background(20);
-        x = lerp(x, centerX, 0.1)
-        y = lerp(y, centerY, 0.1)
+        x = lerp(x, centerX, 0.8)
+        y = lerp(y, centerY, 0.4)
         
         //fill(255)
         circle(x, y, radius);
@@ -146,11 +176,11 @@ function draw() {
             timeStill = currentTimeStamp  - start; //milliseconds passées sans bouger (entre mnt et le debut = currentTimeStamp prit au debut)
             //fill(0, 0, 255); //blue circle that keeps growing 
 
-            zoneRadius = timeStill / 200; //pour que le perimetre grossise plus ou moins vite
+            zoneRadius = timeStill / 1000; //pour que le perimetre grossise plus ou moins vite
             circle(x, y, radius * zoneRadius);
         
             const randomPoint = randomPointInCircle(x, y, zoneRadius * 500);
-            console.log(currentTimeStamp);
+            //console.log(currentTimeStamp);
             
             //push them into the array and store creation time
             flowerArray.push({ 
@@ -163,7 +193,7 @@ function draw() {
             for(let f of flowerArray){
                 displayFlower(f.x, f.y, 40, 40, flower1);
                 displayFlower(f.x, f.y, 40, 40, flower2);
-                displayFlower(f.x, f.y, 40, 40, flower);
+                displayFlower(f.x, f.y, 40, 40, flower3);
                 //test
 
 
