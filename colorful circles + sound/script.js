@@ -20,7 +20,11 @@ function draw() {
     //background(200);
 
     synth.play(mouseY, 0.5, 0, 0.2);
-    circle(mouseX, mouseY, 100); //param: center on x, center on y, size (width)
+    let red = random(0, 255);
+    let green = random(0,255);
+    let blue = random(0,255);
+    //fill(red, green, blue);
+    //circle(mouseX, mouseY, 50); //param: center on x, center on y, size (width)
     
 }
 

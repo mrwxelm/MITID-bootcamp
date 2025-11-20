@@ -49,7 +49,7 @@ function draw() {
 
         //draw glasses
         //get positions
-        /*let leftEye = poses[0].left_eye;
+        let leftEye = poses[0].left_eye;
         let rightEye = poses[0].right_eye;
         
         //get distance between eyes
@@ -57,17 +57,17 @@ function draw() {
         console.log(distance);
 
         //draw glasses
-        /*noFill();
+        noFill();
         stroke(255, 0, 0);
         strokeWeight(10);
         circle(rightEye.x, rightEye.y, 40);
-        circle(leftEye.x, leftEye.y, 40);*/
+        circle(leftEye.x, leftEye.y, 40);
 
         
         //clown hat
-        /*let x = leftEye.x - 140;
+        let x = leftEye.x - 140;
         let y = leftEye.y - 220;
-        image(chapeau, x, y, 200, 200);*/
+        image(chapeau, x, y, 200, 200);
 
 
 

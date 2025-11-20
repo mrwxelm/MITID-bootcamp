@@ -19,14 +19,14 @@ function preload() {
     torso = loadImage("torso.png");
     rightFoot = loadImage("rightFoot.png");
     leftFoot = loadImage("leftFoot.png");
-    loadBoard();
+    //loadBoard();
 
 }
 
 function setup() {
     // Code that runs once here
     createCanvas(500, 500).parent("sketch-container");
-    piezo = new five.Piezo(3);
+    //piezo = new five.Piezo(3);
 
     video = createCapture(VIDEO);
     video.hide();
@@ -79,9 +79,9 @@ function draw() {
         image(rightFoot, Lfoot.x - 50, Lfoot.y - 100, 150, 150);
 
 
-        if(distance > 400){
-            piezo.frequency(3000, 500);
-        }
+       // if(distance > 400){
+       //     piezo.frequency(3000, 500);
+       // }
 
     }
 }
