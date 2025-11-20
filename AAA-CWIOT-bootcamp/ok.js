@@ -84,14 +84,6 @@ function detect() {
   });
 }
 
-function displayFlower(x, y, width, height, type){
-    let randomOffsetX = random(-width, width);
-    image(type, x + randomOffsetX , y + randomOffsetX , width, height);
-    //image(flower2, x + randomOffsetX , y + randomOffsetX , width, height);
-    //image(flower3, x + randomOffsetX , y + randomOffsetX , width, height);
-}
-
-
 function preload() {
     flower1 = loadImage("flower1.png");
     flower2 = loadImage("flower2.png");
@@ -181,39 +173,52 @@ function draw() {
             circle(x, y, radius * zoneRadius);
         
             const randomPoint = randomPointInCircle(x, y, zoneRadius * 500);
-            //console.log(currentTimeStamp);
             
+            //---------------- CREATE FLOWERS ----------------//
+            // Offset flower position randomly
+            const offset = 50;
+            let randomOffsetX = random(-offset, offset);
+            let randomOffsetY = random(-offset, offset);
+            let randomMod1 = random(10, 70);
+            let randomMod2 = random(10, 70);
+            let randomMod3 = random(10, 70);
+
             //push them into the array and store creation time
             flowerArray.push({ 
-                x: randomPoint.x, 
-                y: randomPoint.y, 
-                createdAt: Date.now()
+                x: randomPoint.x + randomOffsetX,
+                y: randomPoint.y + randomOffsetY, 
+                createdAt: Date.now(),
+                type: flower1,
+                width: randomMod1,
+                height: randomMod1
             });
-            
-            //draw them
-            for(let f of flowerArray){
-                randomMod1 = random(10, 70);
-                randomMod2 = random(10, 70);
-                randomMod3 = random(10, 70);
-
-
-                displayFlower(f.x, f.y + yOffset, randomMod1, randomMod1 , flower1);
-                displayFlower(f.x, f.y + yOffset, randomMod2, randomMod2, flower2);
-                displayFlower(f.x, f.y + yOffset, randomMod3, randomMod3, flower3);
-                //test
-
-
-
-            } 
-            
-            //remove when older than 2min
-            flowerArray = flowerArray.filter(f => (Date.now() - f.createdAt) < lifetime);
-
+            flowerArray.push({ 
+                x: randomPoint.x + randomOffsetX,
+                y: randomPoint.y + randomOffsetY, 
+                createdAt: Date.now(),
+                type: flower2,
+                width: randomMod2,
+                height: randomMod2 * 1.089
+            });
+            flowerArray.push({ 
+                x: randomPoint.x + randomOffsetX,
+                y: randomPoint.y + randomOffsetY, 
+                createdAt: Date.now(),
+                type: flower3,
+                width: randomMod3 * 1.33,
+                height: randomMod3
+            });
         }else{
             start = currentTimeStamp; //c'est date.now du debut
-            timeStill = 0;
-            
-        }
+            timeStill = 0;   
+        } 
     }
+    
+    //remove when older than expected lifetime
+    flowerArray = flowerArray.filter(f => (Date.now() - f.createdAt) < lifetime);
 
+    //draw them
+    for(let f of flowerArray){
+        image(f.type, f.x, f.y, f.width, f.height);
+    } 
 }
